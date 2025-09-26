@@ -61,6 +61,10 @@ DOWNLOAD_DELAY = 1
 #ITEM_PIPELINES = {
 #    "webscraper.pipelines.WebscraperPipeline": 300,
 #}
+ITEM_PIPELINES = {
+    'webscraper.pipelines.CleanAndConvertPipeline': 300,
+    'webscraper.pipelines.SQLitePipeline': 800,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -85,3 +89,4 @@ DOWNLOAD_DELAY = 1
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
