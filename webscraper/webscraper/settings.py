@@ -63,8 +63,11 @@ DOWNLOAD_DELAY = 1
 #}
 ITEM_PIPELINES = {
     'webscraper.pipelines.CleanAndConvertPipeline': 300,
+    'webscraper.pipelines.AzureSQLPipeline': 300,
     'webscraper.pipelines.SQLitePipeline': 800,
 }
+
+AZURE_SQL_CONNECTION = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:booksdb-server.database.windows.net,1433;Database=booksdb;Uid=sqladmin;Pwd=Rabirahim@25;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

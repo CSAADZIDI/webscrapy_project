@@ -8,6 +8,7 @@
 from itemadapter import ItemAdapter
 import re
 import sqlite3
+import pyodbc
 
 RATING_MAP = {"One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
 
@@ -88,4 +89,53 @@ class SQLitePipeline:
         return item
 
     def close_spider(self, spider):
+        self.conn.close()
+
+
+class AzureSQLPipeline:
+    def __init__(self, conn_str):
+        self.conn_str = conn_str
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            conn_str=crawler.settings.get("AZURE_SQL_CONNECTION")
+        )
+
+    def open_spider(self, spider):
+        self.conn = pyodbc.connect(self.conn_str)
+        self.cursor = self.conn.cursor()
+
+    def process_item(self, item, spider):
+        try:
+            self.cursor.execute("""
+                INSERT INTO Books (
+                    title, price, stock, rating, category, description, upc,
+                    product_type, price_excl_tax, price_incl_tax, tax,
+                    number_of_reviews, availability, image_url, product_page_url
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                item.get('title'),
+                item.get('price'),
+                item.get('stock'),
+                item.get('rating'),
+                item.get('category'),
+                item.get('description'),
+                item.get('upc'),
+                item.get('product_type'),
+                item.get('price_excl_tax'),
+                item.get('price_incl_tax'),
+                item.get('tax'),
+                item.get('number_of_reviews'),
+                item.get('availability'),
+                item.get('image_url'),
+                item.get('product_page_url')
+            ))
+            self.conn.commit()
+        except Exception as e:
+            spider.logger.error(f"Failed to insert item: {e}")
+        return item
+
+    def close_spider(self, spider):
+        self.cursor.close()
         self.conn.close()
