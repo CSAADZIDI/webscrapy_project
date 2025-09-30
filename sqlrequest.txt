@@ -1,0 +1,65 @@
+1. Prix moyen de tous les livres
+SELECT AVG(price) AS prix_moyen
+FROM Books;
+
+2. Prix moyen par catégorie
+SELECT category, AVG(price) AS prix_moyen
+FROM Books
+GROUP BY category
+ORDER BY prix_moyen DESC;
+
+3. Top 5 catégories avec le plus de livres
+SELECT TOP 5 category, COUNT(*) AS nombre_livres
+FROM Books
+GROUP BY category
+ORDER BY nombre_livres DESC
+; 
+
+
+4. Livres les mieux notés
+SELECT TOP 10 title, rating, number_of_reviews
+FROM Books
+ORDER BY rating DESC, number_of_reviews DESC
+;
+
+
+5. Livres les plus chers
+SELECT TOP 10 title, price, category
+FROM Books
+ORDER BY price DESC
+;
+
+6. Répartition des livres par disponibilité
+SELECT availability, COUNT(*) AS nombre_livres
+FROM Books
+GROUP BY availability;
+
+7. Prix moyen, prix min et prix max par catégorie
+SELECT category,
+       AVG(price) AS prix_moyen,
+       MIN(price) AS prix_min,
+       MAX(price) AS prix_max
+FROM Books
+GROUP BY category
+ORDER BY prix_moyen DESC;
+
+8. Top 5 livres avec le plus de critiques
+SELECT TOP 5 title, number_of_reviews, rating
+FROM Books
+ORDER BY number_of_reviews DESC
+;
+
+9. Catégories avec la meilleure note moyenne
+SELECT category, AVG(rating) AS note_moyenne
+FROM Books
+GROUP BY category
+ORDER BY note_moyenne DESC;
+
+10. Analyse combinée : top catégories par prix moyen et note moyenne
+SELECT category, 
+       AVG(price) AS prix_moyen, 
+       AVG(rating) AS note_moyenne, 
+       COUNT(*) AS nombre_livres
+FROM Books
+GROUP BY category
+ORDER BY prix_moyen DESC, note_moyenne DESC;
